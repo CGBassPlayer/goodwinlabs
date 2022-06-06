@@ -1,0 +1,9 @@
+[media-managers]
+
+[media-servers]
+
+[docker-servers:children]
+main-docker
+media-managers
+
+[main-docker]
