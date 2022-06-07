@@ -4,8 +4,8 @@
   apt:
     name:
       - apt-transport-https
-      - ca-certificates 
-      - curl 
+      - ca-certificates
+      - curl
       - gnupg-agent
       - software-properties-common
     update_cache: yes
@@ -18,16 +18,16 @@
   apt_repository:
     repo: deb https://download.docker.com/linux/ubuntu focal stable
 
-- name: Install docker
+- name: Install Docker
   apt:
     name:
       - docker-ce
       - docker-ce-cli
-      - container.io
+      - containerd.io
     update_cache: yes
 
-- name: Add user permissions
-  shell: "usermod -aG docker {{ lookup('env','USER') }}"
+- name: Ddd user permissions
+  shell: "usermod -aG docker {{ lookup ('env', 'USER') }}"
 
 # Python Docker SDK
 - name: Install Python package manager

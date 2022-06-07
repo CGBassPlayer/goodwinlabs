@@ -1,2 +1,196 @@
 ---
-# tasks file for media-manager
+# Docker Network
+- name: Create media network
+  community.docker.docker_network:
+    name: media
+
+# Torrent Client
+- name: Deploy Transmission
+  community.docker.docker_container:
+    name: transmission
+    image: haugene/transmission-openvpn
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "OPENVPN_PROVIDER: PIA"
+      - "OPENVPN_CONFIG: ca_toronto"
+      - "OPENVPN_USERNAME: {{ PIA_USER }}"
+      - "OPENVPN_PASSWORD: {{ PIA_PASS }}"
+      - "LOCAL_NETWORK: 192.168.0.0/24"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/transmission/data:/data"
+    capabilities:
+      - NET_ADMIN
+
+# File Browser
+- name: Deploy FileBrowser
+  community.docker.docker_container:
+    name: filebrowser
+    image: filebrowser/filebrowser
+    restart_policy: unless-stopped
+    env:
+      - PUID={{ PUID }}
+      - PGID={{ PGID }}
+    volumes:
+      - "{{ MEDIA_FOLDER }}:/srv"
+      - "{{ CONFIG_FOLDER }}/filebrowser/filebrowser.db:/database.db"
+    ports:
+      - 8080:80
+
+# Index Handler
+- name: Deploy Prowlarr
+  community.docker.docker_container:
+    name: prowlarr
+    image: lscr.io/linuxserver/prowlarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/prowlarr/config:/config"
+    ports:
+      - 9696:9696
+
+# TV Show Manager
+- name: Deploy Sonarr
+  community.docker.docker_container:
+    name: sonarr
+    image: lscr.io/linuxserver/sonarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/sonarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ TV_FOLDER }}:/tv"
+      - "{{ TV_ANIME_FOLDER }}:/tv-anime"
+    ports:
+      - 8989:8989
+
+- name: Deploy Sonarr 4k
+  community.docker.docker_container:
+    name: sonarr4k
+    image: lscr.io/linuxserver/sonarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/sonarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ TV_4K_FOLDER }}:/tv"
+    ports:
+      - 9898:8989
+
+# Movie Manager
+- name: Deploy Radarr
+  community.docker.docker_container:
+    name: radarr
+    image: lscr.io/linuxserver/radarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/radarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ MOVIE_FOLDER }}:/movie"
+      - "{{ MOVIE_ANIME_FOLDER }}:/movie-anime"
+    ports:
+      - 7878:7878
+
+- name: Deploy Radarr
+  community.docker.docker_container:
+    name: radarr
+    image: lscr.io/linuxserver/radarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/radarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ MOVIE_FOLDER }}:/movie"
+      - "{{ MOVIE_ANIME_FOLDER }}:/movie-anime"
+    ports:
+      - 8787:7878
+
+- name: Deploy Radarr 4k
+  community.docker.docker_container:
+    name: radarr
+    image: lscr.io/linuxserver/radarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/radarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ MOVIE_4k_FOLDER }}:/movie"
+    ports:
+      - 8787:7878
+
+# Music Manager
+- name: Deploy Lidarr
+  community.docker.docker_container:
+    name: lidarr
+    image: lscr.io/linuxserver/lidarr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/lidarr/config:/config"
+      - "{{ DOWNLOAD_FOLDER }}:/downloads"
+      - "{{ MUSIC_FOLDER }}:/music"
+    ports:
+      - 8686:8686
+
+# Media Requests
+- name: Deploy Overseerr
+  community.docker.docker_container:
+    name: overseerr
+    image: lscr.io/linuxserver/overseerr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+      - "LOG_LEVEL=INFO"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/overseerr/config:/config"
+    ports:
+      - 5055:5055
+
+
+
+# - name: Deploy Doplarr
+#   community.docker.docker_container:
+#     name: doplarr
+#     image: lscr.io/linuxserver/doplarr
+#     restart_policy: unless-stopped
+#     env:
+#       - "TZ={{ TZ }}"
+#       - "PUID={{ PUID }}"
+#       - "PGID={{ PGID }}"
+#       - "DISCORD__TOKEN={{ DISCORD_TOKEN }}"
+#       - "OVERSEERR_API={{ OVERSEERR_API }}"
+
+# Custom TV Channels
+- name: Deploy disquetv
+  community.docker.docker_container:
+    name: disquetv
+    image: vexorian/dizquetv
+    restart_policy: unless-stopped
+    volumes:
+      - dizquetv-data:/home/node/app/.dizquetv
+    ports:
+      - 32500:8000

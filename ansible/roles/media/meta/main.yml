@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ryan Goodwin
-  description: Deploy containers to manage media collection
+  description: Deploy container for media server
 
   license: MIT
 

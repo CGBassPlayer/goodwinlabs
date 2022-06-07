@@ -1,0 +1,10 @@
+---
+- name: Deploy Plex
+  community.docker.docker_container:
+    - name: plex
+    - image: lscr.io/linuxserver/plex
+    - restart_policy: unless-stopped
+    - volumes:
+      - "{{ CONFIG_FOLDER }}/plex/config:/config"
+      - "{{ MEDIA_FOLDER }}:/content"
+

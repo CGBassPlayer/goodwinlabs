@@ -12,6 +12,7 @@ Media Server
     * 4 core
     * 8GB RAM
     * NVIDIA GPU
+    * network storage for media
 
   * Applications
     * Plex
@@ -20,7 +21,8 @@ Media Management (Docker)
   * Requirements
     * 4 core
     * 4GB RAM
-    * nework storage for downloads
+    * network storage for downloads
+    * network storage from media
 
   * Applications
     * FileBrowser
@@ -28,7 +30,7 @@ Media Management (Docker)
     * Radarr (x2)
     * Prowlarr
     * Overseerr
-    * Doplarr
+    * Requestrr
     * dizquetv
     * Transmission?
 
@@ -36,11 +38,14 @@ Media Management (Docker)
 
 Development Server (Docker) - Server for my code development
   * Requirements
+    * 8 cores
+    * 8GB RAM
 
   * Applications
     * VSCode Server?
     * Gitea
     * Jenkins
+    * Bookstack
 
 
 ## Home Applications
@@ -66,6 +71,5 @@ Production (Docker) - Important Services
     * PiHole
     * Nginx Proxy Manager
     * Uptime Kuma
-    * Bookstack
 
 ---
