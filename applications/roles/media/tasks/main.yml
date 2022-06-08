@@ -1,0 +1,13 @@
+---
+- name: Deploy Plex
+  community.docker.docker_container:
+    name: plex
+    image: lscr.io/linuxserver/plex
+    restart_policy: unless-stopped
+    env:
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+      - "VERSION=docker"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/plex/config:/config"
+      - "{{ MEDIA_FOLDER }}:/content"

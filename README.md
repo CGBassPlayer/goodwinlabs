@@ -72,4 +72,9 @@ Production (Docker) - Important Services
     * Nginx Proxy Manager
     * Uptime Kuma
 
+## Storage
+NAS (TrueNAS Scale)
+  * No Major Requirements
+
+
 ---

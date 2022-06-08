@@ -3,6 +3,8 @@
 - name: Create media network
   community.docker.docker_network:
     name: media
+    ipam_config:
+      subnet: 172.23.27.0/24
 
 # Torrent Client
 - name: Deploy Transmission
@@ -170,7 +172,19 @@
     ports:
       - 5055:5055
 
-
+- name: Deploy Requestrr
+  community.docker.docker_container:
+    name: requestrr
+    image: lscr.io/linuxserver/requestrr
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/requestrr/config:/config"
+    ports:
+      - 4545:4545
 
 # - name: Deploy Doplarr
 #   community.docker.docker_container:

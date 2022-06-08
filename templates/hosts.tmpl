@@ -1,0 +1,18 @@
+[media-managers]
+%{ for ip in media-managers }
+${ ip }
+%{ end for }
+
+[media-servers]
+%{ for ip in media-servers }
+${ ip }
+%{ end for }
+
+[docker-servers:children]
+main-docker
+media-managers
+
+[main-docker]
+%{ for ip in main-docker }
+${ ip }
+%{ end for }

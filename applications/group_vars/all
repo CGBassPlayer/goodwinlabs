@@ -1,0 +1,8 @@
+---
+MEDIA_FOLDER: /mnt/media
+CONFIG_FOLDER: /mnt/apps
+DOWNLOADS_FOLDER: /mnt/media/downloads
+
+TZ: America/New_York
+PUID: 1000
+PGID: 1000
