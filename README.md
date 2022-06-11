@@ -10,7 +10,7 @@ My homelab infrastructure as code
 Media Server
   * Requirements
     * 4 core
-    * 8GB RAM
+    * 4GB RAM
     * NVIDIA GPU
     * network storage for media
 
