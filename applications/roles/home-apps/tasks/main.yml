@@ -1,0 +1,19 @@
+---
+- name: Deploy Baby Buddy
+  community.docker.docker_container:
+    name: babybuddy
+    image: lscr.io/linuxserver/babybuddy:latest
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/babybuddy/config:/config"
+    ports:
+      - 6212:8000
+
+- name: Deploy Tandoor
+  community.docker.docker_compose:
+    definition: tandoor-compose.yml
+    recreate: always

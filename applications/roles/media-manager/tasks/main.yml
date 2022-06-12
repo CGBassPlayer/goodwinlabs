@@ -186,18 +186,6 @@
     ports:
       - 4545:4545
 
-# - name: Deploy Doplarr
-#   community.docker.docker_container:
-#     name: doplarr
-#     image: lscr.io/linuxserver/doplarr
-#     restart_policy: unless-stopped
-#     env:
-#       - "TZ={{ TZ }}"
-#       - "PUID={{ PUID }}"
-#       - "PGID={{ PGID }}"
-#       - "DISCORD__TOKEN={{ DISCORD_TOKEN }}"
-#       - "OVERSEERR_API={{ OVERSEERR_API }}"
-
 # Custom TV Channels
 - name: Deploy disquetv
   community.docker.docker_container:
