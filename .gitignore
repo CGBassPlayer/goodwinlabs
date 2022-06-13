@@ -47,3 +47,7 @@ operations/variable-scripts/variable.json
 
 ### ANSIBLE
 *.retry
+
+### OTHER
+*.env
+.env

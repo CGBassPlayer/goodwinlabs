@@ -17,3 +17,41 @@
   community.docker.docker_compose:
     definition: tandoor-compose.yml
     recreate: always
+
+- name: Deploy Heimdall
+  community.docker.docker_container:
+    name: heimdall
+    image: lscr.io/linuxserver/heimdall:latest
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/heimdall/config:/config"
+    ports:
+      - 80:8500
+      - 443:8501
+
+- name: Deploy Uptime Kuma
+  community.docker.docker_container:
+    name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    restart_policy: always
+    volumes:
+      - "{{ CONFIG_FOLDER }}/uptime-kuma/config:/app/data"
+    ports:
+      - 3001:3001
+
+- name: Deploy Nginx Proxy Manager
+  community.docker.docker_container:
+    name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:latest
+    restart_policy: always
+    volumes:
+      - "{{ CONFIG_FOLDER }}/nginx-proxy-manager/config:/data"
+      - "{{ CONFIG_FOLDER }}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt"
+    ports:
+      - 8080:80
+      - 8081:81
+      - 4443:443
