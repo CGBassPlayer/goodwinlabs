@@ -1,4 +1,12 @@
 ---
+# QEMU Guest Agent
+- name: Install Guest Agent
+  apt:
+    name:
+      - qemu-guest-agent
+    update_cache: yes
+    state: present
+
 # Docker
 - name: Install prerequisites
   apt:
@@ -8,6 +16,7 @@
       - curl
       - gnupg-agent
       - software-properties-common
+    state: present
     update_cache: yes
 
 - name: Add docker apt-key
@@ -24,6 +33,7 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+    state: present
     update_cache: yes
 
 - name: Ddd user permissions
@@ -33,6 +43,7 @@
 - name: Install Python package manager
   apt:
     name: python3-pip
+    state: present
 
 - name: Install Python SDK
   become_user: "{{ lookup('env', 'USER') }}"
@@ -40,6 +51,7 @@
     name:
       - docker
       - docker-compose
+    state: present
 
 # Containers
 - include_tasks: containers.yml

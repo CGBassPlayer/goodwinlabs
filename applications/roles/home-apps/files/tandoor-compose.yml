@@ -1,6 +1,7 @@
 version: '3'
 services:
-  db_recipes:
+  recipes_db:
+    container_name: recipes_db
     image: postgres:11-alpine
     restart: always
     volumes:
@@ -8,7 +9,8 @@ services:
     env_file:
       - ./tandoor.env
 
-  web_recipes:
+  recipes_web:
+    container_name: recipes_web
     image: vabene1111/recipes
     restart: always
     env_file:
@@ -18,21 +20,22 @@ services:
       - nginx_config:/opt/recipes/nginx/conf.d
       - ./mediafiles:/opt/recipes/mediafiles
     depends_on:
-      - db_recipes
+      - recipes_db
 
-  nginx_recipes:
+  recipes_nginx:
+    container_name: recipes_nginx
     image: nginx:mainline-alpine
     restart: always
     env_file:
-      - ./.env
-    depends_on:
-      - web_recipes
+      - ./tandoor.env
     volumes:
       - nginx_config:/etc/nginx/conf.d:ro
       - staticfiles:/static:ro
       - ./mediafiles:/media:ro
     ports:
       - 1080:80
+    depends_on:
+      - web_recipes
 
 volumes:
   nginx_config:

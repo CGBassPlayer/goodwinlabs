@@ -85,33 +85,71 @@ resource "proxmox_vm_qemu" "media-manager" {
   ipconfig0 = "ip=192.168.0.51/24,gw=192.168.0.1"
 }
 
+resource "proxmox_vm_qemu" "pi_hole" {
+  count       = 1
+  name        = "pihole-${count.index + 1}"
+  vmid        = "202"
+  target_node = "recyclebin"
+  clone       = "ubuntu-2004-cloud"
+  agent       = 1
+  os_type     = "cloud-init"
+  cores       = 2
+  sockets     = 1
+  cpu         = "host"
+  memory      = 2048
+  scsihw      = "virtio-scsi-pci"
+  bootdisk    = "scsi0"
+  disk {
+    slot     = 0
+    size     = "15G"
+    type     = "scsi"
+    storage  = "local-lvm"
+    iothread = 1
+  }
+
+  network {
+    model  = "virtio"
+    bridge = "vmbr0"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      network,
+    ]
+  }
+
+  ipconfig0 = "ip=192.168.0.36/24,gw=192.168.0.1"
+}
+
 resource "local_file" "ansible_inventory" {
   content = templatefile("../../templates/hosts.tmpl",
     {
+      # Old regex = (\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}
       media_managers = [
         for ip in proxmox_vm_qemu.media-manager.*.ifconfig0 :
-        regex("(\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}",
+        regex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
           ip
         )
       ]
       media_servers = [
         for ip in proxmox_vm_qemu.media-server.*.ifconfig0 :
-        regex("(\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}",
+        regex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
           ip
         )
       ]
       home_apps = [
         for ip in proxmox_vm_qemu.main-docker.*.ifconfig0 :
-        regex("(\\b25[0-5]|\\b2[0-4][0-9]|\\b[01]?[0-9][0-9]?)(\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}",
+        regex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
+          ip
+        )
+      ]
+      pi_holes = [
+        for ip in proxmox_vm_qemu.pi_hole.*.ifconfig0 :
+        regex("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}",
           ip
         )
       ]
     }
   )
   filename = "../../applications/hosts"
-
-  depends_on = [
-    proxmox_vm_qemu.media-manager,
-    proxmox_vm_qemu.media_servers
-  ]
 }

@@ -12,3 +12,8 @@ ${ ip }
 %{ for ip in home_apps }
 ${ ip }
 %{ end for }
+
+[pi-hole]
+%{ for ip in piholes }
+${ ip }
+%{ end for }
