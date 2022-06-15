@@ -197,3 +197,14 @@
       - dizquetv-data:/home/node/app/.dizquetv
     ports:
       - 32500:8000
+
+# Plex Stats
+- name: Deploy Tautulli
+  community.docker.docker_container:
+    name: tautulli
+    image: lscr.io/linuxserver/tautulli:latest
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ CONFIG_FOLDER }}/tautulli/config:/config"
+    ports:
+      - 8181:8181
