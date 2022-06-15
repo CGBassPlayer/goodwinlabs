@@ -13,6 +13,11 @@ ${ ip }
 ${ ip }
 %{ end for }
 
+[docker-servers:children]
+media_managers
+media_servers
+home-servers
+
 [pi-hole]
 %{ for ip in piholes }
 ${ ip }

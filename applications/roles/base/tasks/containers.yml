@@ -11,7 +11,7 @@
     ports:
       - 9000:9000
       - 8000:8000
-  when: "'docker-main' in group_names"
+  when: "'home-apps' in group_names"
 
 - name: Deploy Portainer Agent
   community.docker.docker_container:

@@ -2,8 +2,11 @@
 
 [media-servers]
 
-[docker-servers:children]
-main-docker
-media-managers
+[home-servers]
 
-[main-docker]
+[docker-servers:children]
+media_managers
+media_servers
+home-servers
+
+[pi-hole]

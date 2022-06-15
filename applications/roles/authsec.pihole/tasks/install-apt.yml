@@ -1,6 +1,0 @@
-- name: Install docker and pip3
-  apt:
-    pkg:
-      - docker.io
-      - python3-pip
-    state: present

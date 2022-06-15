@@ -7,53 +7,5 @@
     update_cache: yes
     state: present
 
-# Docker
-- name: Install prerequisites
-  apt:
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gnupg-agent
-      - software-properties-common
-    state: present
-    update_cache: yes
-
-- name: Add docker apt-key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-
-- name: Add docker repo
-  apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu focal stable
-
-- name: Install Docker
-  apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-    state: present
-    update_cache: yes
-
-- name: Ddd user permissions
-  shell: "usermod -aG docker {{ lookup ('env', 'USER') }}"
-
-# Python Docker SDK
-- name: Install Python package manager
-  apt:
-    name: python3-pip
-    state: present
-
-- name: Install Python SDK
-  become_user: "{{ lookup('env', 'USER') }}"
-  pip:
-    name:
-      - docker
-      - docker-compose
-    state: present
-
-# Containers
-- include_tasks: containers.yml
-  become_user: "{{ lookup('env', 'USER') }}"
-  when: "'docker-servers' in group_names"
+- include_tasks: docker.yml
+  when: "'docker_servers' in group_names"
