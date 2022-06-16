@@ -1,15 +1,63 @@
 terraform {
+  required_version = ">= 0.14"
+
   required_providers {
     proxmox = {
       source = "telmate/proxmox"
+      version = "2.9.10"
     }
+
+    ansiblevault = {
+      source  = "MeilleursAgents/ansiblevault"
+      version = "2.2.0"
+    }
+  }
+
+  backend "s3" {
+    bucket = var.bucket
+    key    = var.key
+
+    endpoint = var.endpoint
+
+    access_key = var.access_key
+    secret_key = var.secret_key
+
+    region                      = var.region
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    force_path_style            = true
   }
 }
 
+provider "ansiblevault" {
+  alias = "vault"
+  vault_path = ""
+  root_folder = "../vaults/secrets.yml"
+}
+
+data "ansiblevault_path" "proxmox_api_url" {
+  provider = ansiblevault.vault
+  path     = "./secrets.yml"
+  key      = "proxmox.api_url"
+}
+
+data "ansiblevault_path" "proxmox_token_id" {
+  provider = ansiblevault.vault
+  path     = "./secrets.yml"
+  key      = "proxmox.api_token_id"
+}
+
+data "ansiblevault_path" "proxmox_token_secret" {
+  provider = ansiblevault.vault
+  path     = "./secrets.yml"
+  key      = "proxmox.api_token_secret"
+}
+
 provider "proxmox" {
-  pm_api_url          = ""
-  pm_api_token_id     = ""
-  pm_api_token_secret = ""
+  pm_api_url          = data.ansiblevault_path.proxmox_api_url.value
+  pm_api_token_id     = data.ansiblevault_path.proxmox_token_id.value
+  pm_api_token_secret = data.ansiblevault_path.proxmox_token_secret.value
   pm_tls_insecure     = true
 }
 
@@ -18,7 +66,7 @@ resource "proxmox_vm_qemu" "media-server" {
   name        = "plex"
   vmid        = "200"
   target_node = "milkyway"
-  clone       = "ubuntu-2004-cloud"
+  clone       = var.base_image
   agent       = 1
   os_type     = "cloud-init"
   cores       = 4
@@ -54,7 +102,7 @@ resource "proxmox_vm_qemu" "media-manager" {
   name        = "media-manager"
   vmid        = "201"
   target_node = "milkyway"
-  clone       = "ubuntu-2004-cloud"
+  clone       = var.base_image
   agent       = 1
   os_type     = "cloud-init"
   cores       = 4
@@ -90,7 +138,7 @@ resource "proxmox_vm_qemu" "pi_hole" {
   name        = "pihole-${count.index + 1}"
   vmid        = "202"
   target_node = "recyclebin"
-  clone       = "ubuntu-2004-cloud"
+  clone       = var.base_image
   agent       = 1
   os_type     = "cloud-init"
   cores       = 2
