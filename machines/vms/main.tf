@@ -135,7 +135,7 @@ resource "proxmox_vm_qemu" "media-manager" {
 
 resource "proxmox_vm_qemu" "pi_hole" {
   count       = 1
-  name        = "pihole-${count.index + 1}"
+  name        = "pihole"
   vmid        = "202"
   target_node = "recyclebin"
   clone       = var.base_image
