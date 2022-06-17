@@ -21,6 +21,8 @@
       - "LOCAL_NETWORK: 192.168.0.0/24"
     volumes:
       - "{{ CONFIG_FOLDER }}/transmission/data:/data"
+    ports:
+      - 9091:9091
     capabilities:
       - NET_ADMIN
 

@@ -1,2 +1,4 @@
 ---
-# handlers file for media
+- name: Manual Share Mount
+  become: true
+  command: "sudo mount -a"
