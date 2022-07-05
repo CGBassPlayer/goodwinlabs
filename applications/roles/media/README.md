@@ -1,38 +1,54 @@
-Role Name
-=========
+Media Server
+============
 
-A brief description of the role goes here.
-
-Requirements
-------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+A series of docker containers to allow full automation of media management.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+| Variable          | Description                                         | Required | Default |
+| ----------------- | --------------------------------------------------- | :------: | ------- |
+| `TZ`              | Timezone                                            | - [ ]    | `America/New_York` |
+| `PUID`            | User ID                                             | - [ ]    | `1000` |
+| `PGID`            | Group ID                                            | - [ ]    | `1000` |
+| `DISK_UUID`       | UUID of disk holding media                          | - [x]    |  |
+| `DOWNLOAD_FOLDER` | Folder where completed torrents are downloaded      | - [ ]    | `/mnt/downloads` |
+| `CONFIG_FOLDER`   | Folder containing all persistent configuration data | - [ ]    | `~/.config` |
+| `MEDIA_FOLDER`    | base folder for all media content                   | - [ ]    | `/mnt/content` |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+* Docker module
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Required vars
+```yaml
+- hosts: media-servers
+  include_roles:
+    - name: media
+      vars:
+        DISK_UUID: "UUID"
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+All variables
+```yaml
+- hosts: media-servers
+  include_roles:
+    - name: media
+      vars:
+        DISK_UUID: "UUID"
+        TZ: "America/New_York"
+        PUID: "1000"
+        PGID: "1000"
+        DOWNLOAD_FOLDER: "/mnt/downloads"
+        CONFIG_FOLDER: "~/.config"
+        MEDIA_FOLDER: "/mnt/content"
+```
 
 License
 -------
 
 BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
