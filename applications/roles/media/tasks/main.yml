@@ -10,7 +10,7 @@
   linesinfile:
     state: present
     path: "/etc/fstab"
-    line: "UUID=<SET_THIS_VALUE> /mnt/content auto defaults 0 0"
+    line: "UUID={{ DISK_UUID }} /mnt/content auto defaults 0 0"
   notify:
     - Manual Share Mount
 

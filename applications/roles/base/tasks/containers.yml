@@ -30,5 +30,8 @@
     image: containrrr/watchtower
     restart_policy: always
     command: --schedule "0 0 4 * * *"
+    env:
+      - "TZ={{ TZ }}"
+      - WATCHTOWER_CLEANUP=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

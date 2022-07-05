@@ -108,23 +108,6 @@
     ports:
       - 7878:7878
 
-- name: Deploy Radarr
-  community.docker.docker_container:
-    name: radarr
-    image: lscr.io/linuxserver/radarr
-    restart_policy: unless-stopped
-    env:
-      - "TZ={{ TZ }}"
-      - "PUID={{ PUID }}"
-      - "PGID={{ PGID }}"
-    volumes:
-      - "{{ CONFIG_FOLDER }}/radarr/config:/config"
-      - "{{ DOWNLOAD_FOLDER }}:/downloads"
-      - "{{ MOVIE_FOLDER }}:/movie"
-      - "{{ MOVIE_ANIME_FOLDER }}:/movie-anime"
-    ports:
-      - 8787:7878
-
 - name: Deploy Radarr 4k
   community.docker.docker_container:
     name: radarr
@@ -137,9 +120,38 @@
     volumes:
       - "{{ CONFIG_FOLDER }}/radarr/config:/config"
       - "{{ DOWNLOAD_FOLDER }}:/downloads"
-      - "{{ MOVIE_4k_FOLDER }}:/movie"
+      - "{{ MOVIE_4K_FOLDER }}:/movie"
     ports:
       - 8787:7878
+
+# Distributable Transcoding Server
+- name: Deploy Tdarr
+  community.docker.docker_container:
+    name: tdarr-server
+    image: ghcr.io/haveagitgat/tdarr
+    restart_policy: unless-stopped
+    network_mode: bridge
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+      - serverIP=0.0.0.0
+      - webUIPort=8265
+      - serverPort=8266
+      - internalNode=true
+      - nodeId=ServerNode
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - "{{ CONFIG_FOLDER }}/tdarr-server/server:/app/server"
+      - "{{ CONFIG_FOLDER }}/tdarr-server/config:/app/config"
+      - "{{ CONFIG_FOLDER }}/tdarr-server/logs:/app/logs"
+      - "{{ MEDIA_FOLDER }}:/content"
+      - /temp:/temp
+    ports:
+      - 8265:8265
+      - 8266:8266
+
 
 # Music Manager
 - name: Deploy Lidarr
