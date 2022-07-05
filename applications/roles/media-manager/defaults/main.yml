@@ -1,2 +1,15 @@
 ---
-# defaults file for media-manager
+TZ: "America/New_York"
+PUID: 1000
+PGID: 1000
+
+DOWNLOAD_FOLDER: "/mnt/downloads"
+CONFIG_FOLDER: "~/.config/"
+MEDIA_FOLDER: "/mnt/content"
+
+MOVIE_FOLDER: "{{ MEDIA_FOLDER }}/movies"
+MOVIE_ANIME_FOLDER: "{{ MEDIA_FOLDER }}/movies-anime"
+MOVIE_4K_FOLDER: "{{ MEDIA_FOLDER }}/movies-4k"
+TV_FOLDER: "{{ MEDIA_FOLDER }}/tv"
+TV_ANIME_FOLDER: "{{ MEDIA_FOLDER }}/tv-anime"
+TV_4K_FOLDER: "{{ MEDIA_FOLDER }}/tv-4k"

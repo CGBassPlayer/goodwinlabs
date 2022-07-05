@@ -1,2 +1,8 @@
 ---
-# defaults file for media
+TZ: "America/New_York"
+PUID: 1000
+PGID: 1000
+
+DOWNLOAD_FOLDER: "/mnt/downloads"
+CONFIG_FOLDER: "~/.config/"
+MEDIA_FOLDER: "/mnt/content"
