@@ -55,3 +55,17 @@
       - 8080:80
       - 8081:81
       - 4443:443
+
+- name: Deploy Librespeed
+  community.docker.docker_container:
+    name: librespeed
+    image: 	ghcr.io/linuxserver/librespeed:latest
+    restart_policy: unless-stopped
+    env:
+      - "TZ={{ TZ }}"
+      - "PUID={{ PUID }}"
+      - "PGID={{ PGID }}"
+    volumes:
+      - "{{ CONFIG_FOLDER }}/librespeed/config:/config"
+    ports:
+      - 8505:80
