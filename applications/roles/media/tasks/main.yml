@@ -18,7 +18,7 @@
   linesinfile:
     state: present
     path: "/etc/fstab"
-    line: "//192.168.0.39/torrents /mnt/downloads cifs vers=3.0,credentials=/home/{{ username }}/.sharelogin,iocharset=utf8,file_mode=0777,dir_mode=0777,uid={{ username }},gid={{ username }},nofail 0 0"
+    line: "//192.168.0.39/torrents /mnt/downloads cifs vers=3.0,credentials=/home/{{ lookup('env', 'USER') }}/.credentials/torrentlogin,iocharset=utf8,file_mode=0777,dir_mode=0777,uid={{ lookup('env', 'USER') }},gid={{ lookup('env', 'USER') }},nofail 0 0"
   notify:
     - Manual Share Mount
 

@@ -1,7 +1,7 @@
 Media Server
 ============
 
-A series of docker containers to allow full automation of media management.
+Mount a Hard drive and a network share and Deploy Plex Media Server in a docker container.
 
 Role Variables
 --------------
